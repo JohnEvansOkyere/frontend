@@ -1,103 +1,163 @@
-import Image from "next/image";
+// frontend/src/app/page.tsx
+'use client';
 
-export default function Home() {
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { authUtils } from '@/lib/auth';
+import { FileText, MessageSquare, Shield, Zap } from 'lucide-react';
+
+export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (authUtils.isAuthenticated()) {
+      router.push('/chat');
+    }
+  }, [router]);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex justify-between items-center py-6">
+          <div className="flex items-center">
+            <FileText className="h-8 w-8 text-blue-600 mr-2" />
+            <h1 className="text-2xl font-bold text-gray-900">VexaAI RAG Chat PDF</h1>
+          </div>
+          <div className="space-x-4">
+            <a
+              href="/auth/login"
+              className="text-gray-600 hover:text-gray-900"
+            >
+              Sign In
+            </a>
+            <a
+              href="/auth/register"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            >
+              Get Started
+            </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Hero Section */}
+        <div className="text-center py-20">
+          <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            Chat with Your
+            <span className="text-blue-600"> PDF Documents</span>
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Upload any PDF and ask questions about its content. Get instant, accurate answers powered by advanced AI.
+          </p>
+          <div className="space-x-4">
+            <a
+              href="/auth/register"
+              className="bg-blue-600 text-white px-8 py-3 rounded-md text-lg hover:bg-blue-700 inline-block"
+            >
+              Start Chatting
+            </a>
+            <a
+              href="#features"
+              className="border border-gray-300 text-gray-700 px-8 py-3 rounded-md text-lg hover:bg-gray-50 inline-block"
+            >
+              Learn More
+            </a>
+          </div>
+        </div>
+
+        {/* Features Section */}
+        <div id="features" className="py-20">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              Powerful Features
+            </h3>
+            <p className="text-xl text-gray-600">
+              Everything you need to unlock the knowledge in your documents
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6">
+              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <FileText className="h-8 w-8 text-blue-600" />
+              </div>
+              <h4 className="text-xl font-semibold mb-2">PDF Upload & Processing</h4>
+              <p className="text-gray-600">
+                Upload PDFs up to 50MB and get them processed instantly with advanced text extraction.
+              </p>
+            </div>
+
+            <div className="text-center p-6">
+              <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="h-8 w-8 text-green-600" />
+              </div>
+              <h4 className="text-xl font-semibold mb-2">Intelligent Chat</h4>
+              <p className="text-gray-600">
+                Ask questions in natural language and get contextual answers based on your document content.
+              </p>
+            </div>
+
+            <div className="text-center p-6">
+              <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-purple-600" />
+              </div>
+              <h4 className="text-xl font-semibold mb-2">Fast & Accurate</h4>
+              <p className="text-gray-600">
+                Powered by cutting-edge AI models for quick, accurate responses with source citations.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* How it Works */}
+        <div className="py-20 bg-white rounded-lg shadow-sm">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h3>
+            <p className="text-xl text-gray-600">
+              Get started in three simple steps
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 px-8">
+            <div className="text-center">
+              <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-4 text-lg font-bold">
+                1
+              </div>
+              <h4 className="text-xl font-semibold mb-2">Upload Your PDF</h4>
+              <p className="text-gray-600">
+                Drag and drop or select your PDF document. We'll process it and extract the content.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-4 text-lg font-bold">
+                2
+              </div>
+              <h4 className="text-xl font-semibold mb-2">Ask Questions</h4>
+              <p className="text-gray-600">
+                Type your questions about the document in natural language.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-4 text-lg font-bold">
+                3
+              </div>
+              <h4 className="text-xl font-semibold mb-2">Get Answers</h4>
+              <p className="text-gray-600">
+                Receive instant, accurate answers based on your document's content.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="py-8 text-center text-gray-600">
+          <p>© 2024 VexaAI RAG Chat PDF. Developed by John Evans Okyere.</p>
+        </div>
+      </div>
     </div>
   );
 }
