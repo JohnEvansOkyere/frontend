@@ -3,15 +3,15 @@ import { User, AuthResponse } from '@/types';
 
 export const authUtils = {
   setAuth: (authData: AuthResponse) => {
-    localStorage.setItem('authToken', authData.access_token);  // Changed to match login form
-    localStorage.setItem('authUser', JSON.stringify(authData.user));  // Changed to match login form
+    localStorage.setItem('access_token', authData.access_token); // Match api.ts
+    localStorage.setItem('user', JSON.stringify(authData.user)); // Match api.ts
   },
 
   getAuth: () => {
     if (typeof window === 'undefined') return { user: null, token: null };
     
-    const token = localStorage.getItem('authToken');
-    const user = localStorage.getItem('authUser');
+    const token = localStorage.getItem('access_token'); // Match api.ts
+    const user = localStorage.getItem('user'); // Match api.ts
     
     return {
       user: user ? JSON.parse(user) : null,
@@ -20,13 +20,13 @@ export const authUtils = {
   },
 
   clearAuth: async () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('authUser');
+    localStorage.removeItem('access_token'); // Match api.ts
+    localStorage.removeItem('user'); // Match api.ts
   },
 
   isAuthenticated: (): boolean => {
     if (typeof window === 'undefined') return false;
-    const token = localStorage.getItem('authToken');  // Changed to match other methods
+    const token = localStorage.getItem('access_token'); // Match api.ts
     return !!token;
   },
 };
