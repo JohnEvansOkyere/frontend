@@ -1,4 +1,3 @@
-
 // frontend/src/lib/api.ts
 import axios from 'axios';
 import { AuthResponse, Document, ChatSession, ChatMessage, ChatRequest, ChatResponse } from '@/types';
@@ -14,31 +13,22 @@ const api = axios.create({
 });
 
 // Request interceptor to add auth token
-// frontend/src/lib/api.ts (around line 15)
-// frontend/src/lib/api.ts
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');  // Make sure this says 'authToken'
-  console.log('Looking for token with key "authToken":', token);
-  console.log('All localStorage keys:', Object.keys(localStorage));
+  const token = localStorage.getItem('access_token'); // Use consistent key
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log('Authorization header set:', config.headers.Authorization);
-  } else {
-    console.log('No token found - request will be unauthorized');
   }
   return config;
 });
 
 // Response interceptor to handle auth errors
-// frontend/src/lib/api.ts (around line 25 in the response interceptor)
-// frontend/src/lib/api.ts (around line 25)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('authToken');  // Change from 'access_token' to 'authToken'
-      localStorage.removeItem('authUser');   // Change from 'user' to 'authUser'
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
       window.location.href = '/auth/login';
     }
     return Promise.reject(error);
@@ -61,12 +51,24 @@ export const authAPI = {
       email,
       password,
     });
+    
+    // Store token and user data consistently
+    const { access_token, user } = response.data;
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('user', JSON.stringify(user));
+    
     return response.data;
   },
 
   logout: async () => {
-    const response = await api.post('/auth/logout');
-    return response.data;
+    try {
+      const response = await api.post('/auth/logout');
+      return response.data;
+    } finally {
+      // Always clear local storage on logout
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+    }
   },
 
   getProfile: async () => {
@@ -143,3 +145,6 @@ export const healthAPI = {
     return response.data;
   },
 };
+
+// Export api instance for direct use if needed
+export default api;
